@@ -7,3 +7,5 @@ export const recipeSchema = z.object({
     .array(z.string().min(1, "string cannot be empty"))
     .nonempty("must have at least one ingredients"),
 });
+
+export type TRecipeSchema = z.infer<typeof recipeSchema>;
