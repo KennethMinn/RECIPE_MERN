@@ -40,6 +40,9 @@ export const RecipeController = {
         return res.status(400).json({ message: "Not a valid id." });
       }
       const recipe = await Recipe.findByIdAndUpdate(id, newData, { new: true }); //new : true is returning the updated value
+      if (!recipe) {
+        return res.status(404).json({ message: "Recipe not found." });
+      }
       return res.status(200).json(recipe);
     } catch (error) {
       return res.status(500).json({ message: "Internal server error" });
@@ -48,6 +51,9 @@ export const RecipeController = {
   destroy: async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Not a valid id." });
+      }
       await Recipe.findByIdAndDelete(id);
       return res.json({ message: "recipe deleted" });
     } catch (error) {
