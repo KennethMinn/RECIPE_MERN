@@ -1,10 +1,9 @@
-import { recipeSchema, TRecipeSchema } from "./../types/recipeSchema";
 import { Request, Response } from "express";
 import Recipe from "../models/Recipe";
 import mongoose from "mongoose";
 
 export const RecipeController = {
-  index: async (req: Request, res: Response) => {
+  index: async (_req: Request, res: Response) => {
     const recipes = await Recipe.find();
     return res.json(recipes);
   },
