@@ -2,10 +2,19 @@ import { useNavigate } from "react-router-dom";
 import "./App.css";
 import { useGetAllRecipes } from "./hooks/useGetAllRecipes";
 import { Recipe } from "./types";
+import { MouseEvent } from "react";
+import { useDeleteRecipe } from "./hooks/useDeleteRecipe";
 
 function App() {
   const navigate = useNavigate();
   const { data: recipes, isLoading } = useGetAllRecipes();
+  const { mutate: deleteRecipe } = useDeleteRecipe();
+
+  const onDelete = (e: MouseEvent<HTMLButtonElement>, id: string) => {
+    e.stopPropagation();
+    deleteRecipe(id);
+    alert("deleted");
+  };
 
   if (isLoading) return <h1>Loading...</h1>;
 
@@ -15,20 +24,28 @@ function App() {
         <div
           onClick={() => navigate(`/${recipe._id}`)}
           key={recipe._id}
-          className="p-5 border border-gray-300 cursor-pointer"
+          className="flex items-center justify-between p-5 border border-gray-300 cursor-pointer"
         >
-          <h1 className="text-2xl font-bold">{recipe.title}</h1>
-          <p>{recipe.description}</p>
-          <div className="flex mt-3 gap-x-3">
-            {recipe.ingredients.map((ingredient: string) => (
-              <div
-                className="flex items-center justify-center px-3 text-white bg-black rounded-xl"
-                key={ingredient}
-              >
-                {ingredient}
-              </div>
-            ))}
+          <div>
+            <h1 className="text-2xl font-bold">{recipe.title}</h1>
+            <p>{recipe.description}</p>
+            <div className="flex mt-3 gap-x-3">
+              {recipe.ingredients.map((ingredient: string) => (
+                <div
+                  className="flex items-center justify-center px-3 text-white bg-black rounded-xl"
+                  key={ingredient}
+                >
+                  {ingredient}
+                </div>
+              ))}
+            </div>
           </div>
+          <button
+            onClick={(e) => onDelete(e, recipe._id)}
+            className="px-3 py-2 text-white bg-red-600 rounded-md cursor-pointerx"
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>
