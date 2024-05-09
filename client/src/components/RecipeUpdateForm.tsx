@@ -1,14 +1,17 @@
-import { FormEvent, useState } from "react";
-import { useCreateRecipe } from "../hooks/useCreateRecipe";
-import { useNavigate } from "react-router-dom";
+import { FormEvent, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetRecipe } from "../hooks/useGetRecipe";
+import { useUpdateCountry } from "../hooks/useUpdateRecipe";
 
-const RecipeCreateForm = () => {
+const RecipeUpdateForm = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [ingredient, setIngredient] = useState("");
   const [ingredients, setIngredients] = useState<string[]>([]);
-  const { mutate: addRecipe, isPending } = useCreateRecipe();
+  const { data: recipe, isLoading } = useGetRecipe(id!);
+  const { mutate: updateRecipe, isPending } = useUpdateCountry(id!);
 
   const onAddRecipe = (ingredient: string): void => {
     if (!ingredient) return;
@@ -19,9 +22,18 @@ const RecipeCreateForm = () => {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = { title, description, ingredients };
-    addRecipe(data);
+    updateRecipe(data);
+
     navigate("/");
   };
+
+  useEffect(() => {
+    setTitle(recipe?.title ? recipe.title : "");
+    setDescription(recipe?.description ? recipe.description : "");
+    setIngredients(recipe?.ingredients ? recipe?.ingredients : []);
+  }, [recipe]);
+
+  if (isLoading) return <h1>loading...</h1>;
 
   return (
     <div className="flex justify-center">
@@ -29,7 +41,7 @@ const RecipeCreateForm = () => {
         onSubmit={onSubmit}
         className="p-10 mt-10 border border-black rounded-md w-[400px]"
       >
-        <h1 className="mb-5 text-2xl font-bold text-center">Create Form</h1>
+        <h1 className="mb-5 text-2xl font-bold text-center">Update Form</h1>
         <div className="flex flex-col gap-y-3">
           <input
             onChange={(e) => setTitle(e.target.value)}
@@ -75,7 +87,7 @@ const RecipeCreateForm = () => {
             type="submit"
             className="p-3 text-center text-white bg-black rounded-md cursor-pointer"
           >
-            {isPending ? "Adding..." : "Add"}
+            {isPending ? "Updating" : "Update"}
           </button>
         </div>
       </form>
@@ -83,4 +95,4 @@ const RecipeCreateForm = () => {
   );
 };
 
-export default RecipeCreateForm;
+export default RecipeUpdateForm;

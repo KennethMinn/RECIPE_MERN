@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export const RecipeController = {
   index: async (_req: Request, res: Response) => {
-    const recipes = await Recipe.find();
+    const recipes = await Recipe.find().sort({ createdAt: -1 }); //sort by descending with createdAt
     return res.json(recipes);
   },
   show: async (req: Request, res: Response) => {
