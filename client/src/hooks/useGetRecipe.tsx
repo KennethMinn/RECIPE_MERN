@@ -10,6 +10,6 @@ export const useGetRecipe = (id: string) => {
       const data: Recipe = await res.data;
       return data;
     },
-    enabled: !!id,
+    enabled: !!id, //boolean case -> if(id) = !!id
   });
 };

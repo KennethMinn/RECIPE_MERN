@@ -2,10 +2,40 @@ import { Request, Response } from "express";
 import Recipe from "../models/Recipe";
 import mongoose from "mongoose";
 
+type Num = { number: number };
+
 export const RecipeController = {
-  index: async (_req: Request, res: Response) => {
-    const recipes = await Recipe.find().sort({ createdAt: -1 }); //sort by descending with createdAt
-    return res.json(recipes);
+  index: async (req: Request, res: Response) => {
+    const limit = 6; //items per page
+    // ?page = 1
+    let page: number = parseInt(req.query.page as string) || 1; // Parse string to number
+
+    const recipes = await Recipe.find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 }); //sort by descending with createdAt
+
+    const totalRecipes = await Recipe.countDocuments(); //length of all recipes
+    const totalPages = Math.ceil(totalRecipes / limit);
+
+    let link = {
+      nextPage: page == totalPages ? false : true,
+      previousPage: page == 1 ? false : true,
+      currentPage: page, //page from user req query
+      numbers: [],
+    };
+
+    for (let index = 1; index <= totalPages; index++) {
+      const num: Num = { number: index };
+      link.numbers.push(num as never);
+    }
+
+    const response = {
+      link,
+      recipes,
+    };
+
+    return res.json(response);
   },
   show: async (req: Request, res: Response) => {
     try {

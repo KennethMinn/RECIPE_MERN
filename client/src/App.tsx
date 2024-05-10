@@ -1,14 +1,19 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./App.css";
 import { useGetAllRecipes } from "./hooks/useGetAllRecipes";
 import { Recipe } from "./types";
 import { MouseEvent } from "react";
 import { useDeleteRecipe } from "./hooks/useDeleteRecipe";
+import Pagination from "./components/Pagination";
 
 function App() {
   const navigate = useNavigate();
-  const { data: recipes, isLoading } = useGetAllRecipes();
+  const { search } = useLocation();
+  const { data, isLoading } = useGetAllRecipes();
   const { mutate: deleteRecipe } = useDeleteRecipe();
+
+  const searchParams = new URLSearchParams(search);
+  const page = searchParams.get("page");
 
   const onDelete = (e: MouseEvent<HTMLButtonElement>, id: string) => {
     e.stopPropagation();
@@ -20,7 +25,7 @@ function App() {
 
   return (
     <div className="flex flex-col mx-5 mt-5 gap-y-3">
-      {recipes.map((recipe: Recipe) => (
+      {data.recipes.map((recipe: Recipe) => (
         <div
           onClick={() => navigate(`/${recipe._id}`)}
           key={recipe._id}
@@ -48,6 +53,7 @@ function App() {
           </button>
         </div>
       ))}
+      <Pagination page={page || "1"} link={data.link} />
     </div>
   );
 }

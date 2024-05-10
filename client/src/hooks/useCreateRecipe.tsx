@@ -4,6 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "../lib/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 type CreateRecipeValues = {
   title: string;
@@ -13,6 +14,7 @@ type CreateRecipeValues = {
 
 export const useCreateRecipe = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (data: CreateRecipeValues) => {
@@ -24,6 +26,7 @@ export const useCreateRecipe = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["recipes"] as InvalidateQueryFilters);
+      navigate("/");
     },
   });
 };

@@ -1,9 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useCreateRecipe } from "../hooks/useCreateRecipe";
-import { useNavigate } from "react-router-dom";
 
 const RecipeCreateForm = () => {
-  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [ingredient, setIngredient] = useState("");
@@ -20,7 +18,6 @@ const RecipeCreateForm = () => {
     e.preventDefault();
     const data = { title, description, ingredients };
     addRecipe(data);
-    navigate("/");
   };
 
   return (
