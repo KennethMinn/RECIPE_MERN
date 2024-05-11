@@ -41,13 +41,14 @@ UserSchema.statics.register = async function (req: Request, res: Response) {
 
   //this - User model
   const isExistedUser = await this.findOne({ email });
-  if (email === "mtk@gmail.com")
-    return res.status(409).json({ message: "duplicate email" });
+  if (isExistedUser) {
+    throw new Error("user already exists");
+  }
 
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  const user = { name, email, password: hashedPassword };
+  const user = await this.create({ name, email, password: hashedPassword });
 
   return user;
 };

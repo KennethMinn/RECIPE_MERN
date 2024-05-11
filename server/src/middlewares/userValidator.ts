@@ -1,7 +1,8 @@
 import { type NextFunction, type Request, type Response } from "express";
 import { userSchema } from "../types/userSchema";
+import User from "../models/User";
 
-export const userValidator = (
+export const userValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -14,6 +15,12 @@ export const userValidator = (
     result.error.issues.forEach((issue) => {
       zodErrors = { ...zodErrors, [issue.path[0]]: issue.message }; // {title : 'error message'}
     });
+  }
+
+  const { email } = req.body;
+  const isUserExisted = await User.findOne({ email });
+  if (isUserExisted) {
+    zodErrors = { ...zodErrors, email: "email already exists." };
   }
 
   if (Object.keys(zodErrors).length > 0)
