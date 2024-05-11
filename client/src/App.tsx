@@ -9,11 +9,11 @@ import Pagination from "./components/Pagination";
 function App() {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const { data, isLoading } = useGetAllRecipes();
-  const { mutate: deleteRecipe } = useDeleteRecipe();
-
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get("page");
+
+  const { data, isLoading } = useGetAllRecipes(page || "");
+  const { mutate: deleteRecipe } = useDeleteRecipe();
 
   const onDelete = (e: MouseEvent<HTMLButtonElement>, id: string) => {
     e.stopPropagation();

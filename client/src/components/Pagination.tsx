@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface Num {
   number: number;
@@ -16,6 +16,7 @@ interface PaginationProps {
 }
 
 const Pagination = ({ link, page }: PaginationProps) => {
+  const navigate = useNavigate();
   return (
     <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
       <div className="flex justify-between flex-1 sm:hidden">
@@ -38,8 +39,9 @@ const Pagination = ({ link, page }: PaginationProps) => {
             className="inline-flex -space-x-px rounded-md shadow-sm isolate"
             aria-label="Pagination"
           >
-            <a
-              href="#"
+            <button
+              onClick={() => navigate(`/?page=${parseInt(page) - 1}`)}
+              disabled={!link.previousPage}
               className="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span className="sr-only">Previous</span>
@@ -55,7 +57,7 @@ const Pagination = ({ link, page }: PaginationProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-            </a>
+            </button>
             {link.numbers.map((item) =>
               item.number === parseInt(page) ? (
                 <Link
@@ -77,8 +79,9 @@ const Pagination = ({ link, page }: PaginationProps) => {
               )
             )}
 
-            <a
-              href="#"
+            <button
+              onClick={() => navigate(`/?page=${parseInt(page) + 1}`)}
+              disabled={!link.nextPage}
               className="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span className="sr-only">Next</span>
@@ -94,7 +97,7 @@ const Pagination = ({ link, page }: PaginationProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-            </a>
+            </button>
           </nav>
         </div>
       </div>

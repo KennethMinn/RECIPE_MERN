@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-const recipeSchema = new mongoose.Schema(
+const Schema = mongoose.Schema;
+
+const recipeSchema = new Schema(
   {
     title: {
       type: String,

@@ -6,7 +6,7 @@ type Num = { number: number };
 
 export const RecipeController = {
   index: async (req: Request, res: Response) => {
-    const limit = 6; //items per page
+    const limit = 1; //items per page
     // ?page = 1
     let page: number = parseInt(req.query.page as string) || 1; // Parse string to number
 
@@ -16,7 +16,7 @@ export const RecipeController = {
       .sort({ createdAt: -1 }); //sort by descending with createdAt
 
     const totalRecipes = await Recipe.countDocuments(); //length of all recipes
-    const totalPages = Math.ceil(totalRecipes / limit);
+    const totalPages = Math.ceil(totalRecipes / limit); //total pagination numbers
 
     let link = {
       nextPage: page == totalPages ? false : true,
@@ -62,7 +62,7 @@ export const RecipeController = {
     return res.status(200).json(recipe);
   },
   update: async (req: Request, res: Response) => {
-    const newData = { ...req.body };
+    const newData = req.body;
     try {
       const id = req.params.id;
       if (!mongoose.Types.ObjectId.isValid(id)) {
