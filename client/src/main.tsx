@@ -7,6 +7,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout.tsx";
 import RecipeCreateForm from "./components/RecipeCreateForm.tsx";
 import RecipeUpdateForm from "./components/RecipeUpdateForm.tsx";
+import RegisterForm from "./components/RegisterForm.tsx";
+import LoginForm from "./components/LoginForm.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
       {
         path: ":id",
         element: <RecipeUpdateForm />,
+      },
+      {
+        path: "register",
+        element: <RegisterForm />,
+      },
+      {
+        path: "login",
+        element: <LoginForm />,
       },
     ],
   },

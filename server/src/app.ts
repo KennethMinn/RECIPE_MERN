@@ -15,7 +15,12 @@ mongoose.connect(process.env.MONGO_URL!).then(() => {
   });
 });
 
-app.use(cors()); //including an Access-Control-Allow-Origin header to fetch from client
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true, //can set cookies in browser now
+  })
+); //including an Access-Control-Allow-Origin header to fetch from client
 app.use(express.json()); //parse json data from req
 app.use(morgan("dev")); //http middleware
 app.use(cookieParser()); //to set cookies easier

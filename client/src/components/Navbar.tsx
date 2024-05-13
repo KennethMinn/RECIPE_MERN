@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const navItems = ["About", "Contact", "Login", "create"];
+  const navItems = ["About", "Contact", "Login", "create", "register", "login"];
   return (
     <div className="flex items-center justify-around mx-10 ">
       <h1

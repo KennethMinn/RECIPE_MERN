@@ -10,6 +10,7 @@ interface UserDocument extends Document {
 
 interface UserModel extends Model<UserDocument> {
   register(req: Request, res: Response): Promise<UserDocument>;
+  login(req: Request, res: Response): Promise<UserDocument>;
 }
 
 const Schema = mongoose.Schema;
@@ -35,8 +36,8 @@ const UserSchema = new Schema(
   }
 );
 
-//custom method
-UserSchema.statics.register = async function (req: Request, res: Response) {
+//custom methods
+UserSchema.statics.register = async function (req: Request, _res: Response) {
   const { name, email, password } = req.body;
 
   //this - User model
@@ -51,6 +52,20 @@ UserSchema.statics.register = async function (req: Request, res: Response) {
   const user = await this.create({ name, email, password: hashedPassword });
 
   return user;
+};
+
+UserSchema.statics.login = async function (req: Request, _res: Response) {
+  const { email, password } = req.body;
+
+  //this - User model
+  const user = await this.findOne({ email });
+  if (!user) {
+    throw new Error("user does not exist");
+  }
+
+  const isCorrect = await bcrypt.compare(password, user.password);
+  if (isCorrect) return user;
+  throw new Error("Incorrect password");
 };
 
 const User = mongoose.model<UserDocument, UserModel>("User", UserSchema);
