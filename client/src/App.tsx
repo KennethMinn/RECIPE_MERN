@@ -10,9 +10,9 @@ function App() {
   const navigate = useNavigate();
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
-  const page = searchParams.get("page");
+  const page = searchParams.get("page") || "1";
 
-  const { data, isLoading } = useGetAllRecipes(page || "");
+  const { data, isLoading } = useGetAllRecipes(page);
   const { mutate: deleteRecipe } = useDeleteRecipe();
 
   const onDelete = (e: MouseEvent<HTMLButtonElement>, id: string) => {
